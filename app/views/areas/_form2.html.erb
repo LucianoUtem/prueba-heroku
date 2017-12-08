@@ -1,0 +1,23 @@
+<section class="content invoice">
+<div class="row">
+  <div class="col-md-10">
+    <%= form_for(@areas,url: crear_area_url(params[:id]) , :html => { :role => "form" }) do |f| %>
+
+
+      <div class="form-group">
+          <%= f.label :nombre %>
+          <%= f.select(:nombre) do %>
+          <% [['Software', 1], ['Hardware', 2],['Gestion',3],['Sistemas',4]].each do |c| -%>
+            <%= content_tag(:option, c.first, value: c.last) %>
+            <% end %>
+            <% end %>
+          </br>
+      </div>
+      <div class="form-group">
+          <%= f.submit %>
+      </div>
+      
+      <% end%>
+  </div>
+</div>
+</section> 
