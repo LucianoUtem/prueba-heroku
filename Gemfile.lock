@@ -175,7 +175,7 @@ GEM
     will_paginate (3.1.6)
 
 PLATFORMS
-  x86-mingw32
+  
 
 DEPENDENCIES
   adminlte-generators
