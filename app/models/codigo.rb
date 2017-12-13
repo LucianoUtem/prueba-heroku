@@ -1,2 +1,0 @@
-class Codigo < ApplicationRecord
-end
