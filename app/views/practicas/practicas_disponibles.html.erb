@@ -1,0 +1,83 @@
+<% content_for :content_header  do %>
+  <section class="content-header">
+    <h1>Mostrando <small>Practicas</small></h1>
+
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Practicas</li>
+    </ol>    
+  </section>
+<% end %>
+
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box box-primary">
+        <div class="box-header">
+          <div class="box-tools pull-right">
+            <%= link_to nueva_oferta_path(), :class => 'btn btn-success' do %>
+              <span class="glyphicon glyphicon-plus"></span>
+              Nueva Practica
+            <% end %>          
+          </div>
+        </div>
+        <input class="form-control" id="myInput" type="text" placeholder="Buscar..">
+        <div class="box-body table-responsive" id="ocultar-tabla">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+              <th>Fecha Inicio</th>
+              <th>Area</th>
+              <th>Empresa</th>
+              <th class="text-center">Acción</th>
+               
+              </tr>
+            </thead>
+              <tbody id = "datos">
+                <% @practicas.each do |practica| %>
+              
+                  <tr>
+                  <td> <%= practica.fecha_inicio %> </td>
+                  <% if practica.area_id != nil
+                   a= Area.joins(:practica).where(id: practica.empresa_id) %> </td>
+                  <td><%= a.first.nombre %> </td>
+                  <% else %>
+                  <td>Sin area asignada</td>
+                  <%end%>
+                  <% if practica.empresa_id != nil
+                   a= Empresa.joins(:practica).where(id: practica.empresa_id) %> </td>
+                  <td><%= a.first.nombre_empresa %> </td>
+                  <% else %>
+                  <td>Sin empresa asignada </td>
+                  <%end%>
+                  
+                     </div> 
+                    </td>
+                    <td>
+                      <div class="text-center">
+                        <%= link_to 'MOSTRAR', ver_datos_url(params[:id],practica),:class => "btn btn-info"%>
+                        </div>  </td>
+                     
+                    
+                   
+                  </tr>
+                <% end %> 
+              </tbody>
+          </table>
+          
+        </div>   
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#datos tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>

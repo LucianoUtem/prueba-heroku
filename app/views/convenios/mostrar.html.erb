@@ -1,0 +1,44 @@
+<% content_for :content_header  do %>
+    <section class="content-header">
+      <h1>Mostrando <small>Convenios</small></h1>
+  
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><%= link_to "Convenios", convenios_path %></li>
+        <li class="active">Mostrar</li>
+      </ol>
+    </section>
+  <% end %>
+  
+  <section class="content">
+    <div class="row">
+      <div class="col-md-12">
+      
+  
+          <div class="panel panel-default">
+        
+              <div class="pull-right">
+              <%= link_to editar_convenio_path(@convenios), :class => 'btn btn-primary' do %>
+                <span class="glyphicon glyphicon-pencil"></span>
+                Editar
+              <% end %>          
+     
+            </div>
+            <div class="panel-body">
+              <dt>Nombre:</dt>
+              <dd><%= @convenios.nombre %></dd>
+
+              <dt>Fecha inicio:</dt>
+              <dd><%= @convenios.fecha_inicio %></dd>
+
+              <dt>Fecha termino:</dt>
+              <dd><%= @convenios.fecha_termino %></dd>
+
+              <dt>Descripcion:</dt>
+              <dd><%= @convenios.descripcion %></dd>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

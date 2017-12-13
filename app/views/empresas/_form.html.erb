@@ -1,0 +1,98 @@
+<section class="content invoice">
+    <div class="row">
+        <div class="col-md-10">
+            <%= form_for(@empresas, :html => {:role => 'form'}) do |f| %>
+            <% if @empresas.errors.any? %>
+            <div class="alert alert-danger alert-dismissable" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+              <h4><%= pluralize(@empresas.errors.count, "error") %> </h4>
+              <ul>
+                <% @empresas.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+            <% end %>
+            <div class="form-group">
+                <%= f.label :rut_empresa %>
+                <%= f.text_field :rut_empresa,:class => "form-control", :id => "rut" %>
+                </br>
+            </div>
+            <div class="form-group">
+                <%= f.label :nombre_empresa %>
+                <%= f.text_field :nombre_empresa,:class => "form-control", :id => "nombre" %>
+                </br>
+            </div>
+            <div class="form-group">
+                <%= f.submit %>
+            </div>
+            <% end %>
+        </div>
+    </div>
+</section>
+<script>
+  $(document).ready(function(){
+    $('.datepicker').datepicker({
+      language: 'es'
+   });
+  
+    var Fn = {
+        // Valida el rut con su cadena completa "XXXXXXXX-X"
+        validaRut : function (rutCompleto) {
+            rutCompleto = rutCompleto.replace("‐","-");
+            if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test( rutCompleto ))
+                return false;
+            var tmp     = rutCompleto.split('-');
+            var digv    = tmp[1]; 
+            var rut     = tmp[0];
+            if ( digv == 'K' ) digv = 'k' ;
+            
+            return (Fn.dv(rut) == digv );
+        },
+        dv : function(T){
+            var M=0,S=1;
+            for(;T;T=Math.floor(T/10))
+                S=(S+T%10*(9-M++%6))%11;
+            return S?S-1:'k';
+        }
+    }
+
+
+    $("#rut").change(function(){
+        if (Fn.validaRut( $("#rut").val() )){
+            $("#rut-valido").addClass("hidden");
+          
+        } else {
+            $("#rut").val("");
+            $("#rut-valido").removeClass("hidden");
+          
+        }
+      });
+
+    $("#nombre").keypress(function (key) {
+            window.console.log(key.charCode)
+            if ((key.charCode < 97 || key.charCode > 122)//letras mayusculas
+                && (key.charCode < 65 || key.charCode > 90) //letras minusculas
+                && (key.charCode != 45) //retroceso
+                && (key.charCode != 241) //ñ
+                 && (key.charCode != 209) //Ñ
+                 && (key.charCode != 32) //espacio
+                 && (key.charCode != 225) //á
+                 && (key.charCode != 233) //é
+                 && (key.charCode != 237) //í
+                 && (key.charCode != 243) //ó
+                 && (key.charCode != 250) //ú
+                 && (key.charCode != 193) //Á
+                 && (key.charCode != 201) //É
+                 && (key.charCode != 205) //Í
+                 && (key.charCode != 211) //Ó
+                 && (key.charCode != 218) //Ú
+ 
+                )
+                return false;
+      });
+
+              
+  });
+
+</script>
