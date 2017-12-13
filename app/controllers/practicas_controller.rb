@@ -92,7 +92,7 @@ class PracticasController < ApplicationController
         if @practica.save
             format.html {redirect_to nuevo_profesionalGuia_url(@practica), notice: 'Se Persistio la persona'}
           else
-            format.html {render :nuevo2}
+            format.html {render :nuevo3}
           end
       end
   end
@@ -157,7 +157,7 @@ class PracticasController < ApplicationController
   		@practica.evaluacion_id =params[:id2]
   		@practica.save
   		respond_to do |format|
-  			format.html {redirect_to practicas_path, notice: 'Se ingreso la practica correctamente'}
+  			format.html {redirect_to welcome_index_path, notice: 'Se ingreso la practica correctamente'}
   		end
 
   	end
@@ -183,9 +183,44 @@ class PracticasController < ApplicationController
     end
 
   def practicas_disponibles
-      @practicas = Practica.all.where("fecha_inicio > ?", Date.current)
+      @practicas = Practica.all.where("fecha_inicio >= ?", Date.current).where(alumno_id: nil)
   end
 
+  def escoger_practica
+    @practica =Practica.find(params[:id2])
+    @empresa = Empresa.find(@practica.empresa_id)
+    @guia = ProfesionalGuia.find(@practica.profesional_guia_id)
+    @herramienta = Herramienta.find(@practica.herramienta_id)
+    @area = Area.find(@practica.area_id)
+
+  end
+
+  def asignar_practica
+    @practica = Practica.find(params[:id2])
+    respond_to do |format|
+      if @practica.update(alumno_id: params[:id])
+        format.html {redirect_to welcome_index_path, notice: 'la practica se asigno con exito'}
+      end
+    end
+  end
+
+  def practicas_actuales
+    @practica = Practica.all.where("fecha_inicio >= ?", Date.current).where(alumno_id: nil).paginate(page: params[:page], per_page: 10)
+  end
+
+  def mostrar2
+    @practica = Practica.find(params[:id])
+    @empresa = Empresa.find(@practica.empresa_id)
+    @guia = ProfesionalGuia.find(@practica.profesional_guia_id)
+    @herramienta = Herramienta.find(@practica.herramienta_id)
+    @area = Area.find(@practica.area_id)
+  end
+
+  def info_contacto
+    @practica = Practica.find(params[:id])
+    @guia = ProfesionalGuia.find(@practica.profesional_guia_id)
+    @empresa = Empresa.find(@practica.empresa_id)
+  end
 	private
 
 		def set_practica

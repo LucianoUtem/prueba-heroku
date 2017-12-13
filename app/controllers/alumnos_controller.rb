@@ -9,16 +9,26 @@ class AlumnosController < ApplicationController
   def index
       authorize! :index,@alumnos
       if (current_user.role.nombre == "admin")
-        
-      @alumnos = Alumno.all.paginate(page: params[:page], per_page: 10)
+        @q = params[:q]
+          if @q 
+            @query = Alumno.where(:rut => @q)
+            @alumnos = @query.paginate(page: params[:page], per_page: 5)
+          else
+            @alumnos = Alumno.all.paginate(page: params[:page], per_page: 5)
+          end
+      
       end
       if (current_user.role.nombre == "profesorguia")
       @alumnos = Alumno.where(user_id: current_user.id).where("ano = ?", Date.current.year).all.paginate(page: params[:page], per_page: 10)
       end
   end
 
+    def alumnos_pendientes
+      @alumnos = Alumno.all.where(ano: Date.current.year).paginate(page: params[:page], per_page: 10)   
+  end
+
   def alumnos_sin_asignar
-    @alumnos = Alumno.where(user_id: nil)
+    @alumnos = Alumno.joins(:practica).where(user_id: nil,ano: Date.current.year)
   end
 
   # GET /alumnos/1
@@ -71,7 +81,7 @@ class AlumnosController < ApplicationController
   def update2
     respond_to do |format|
       if @alumno.update(alumno_params)
-        format.html { redirect_to alumnos_sin_asignar_path, notice: 'Alumno editado con exito' }
+        format.html { redirect_to alumnos_sin_asignar_path, notice: 'Alumno asignado con exito' }
       else
         format.html { render :edit }
         format.json { render json: @alumno.errors, status: :unprocessable_entity }
@@ -110,9 +120,9 @@ class AlumnosController < ApplicationController
     @alumno = Alumno.new(alumno_params)
       respond_to do |format|
           if @alumno.save
-              format.html {redirect_to nueva_oferta_url(), notice: 'Se Persistio la persona'}
+              format.html {redirect_to welcome_index_path, notice: 'Se Persistio la persona'}
             else
-              #format.html {render :nuevo2}
+              format.html {render :nuevo3}
               #puts "no se guardo"
             end
         end
@@ -130,6 +140,6 @@ class AlumnosController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def alumno_params
-      params.require(:alumno).permit(:nombre, :apellido, :rut, :codigo_carrera, :semestre, :ano, :user_id)
+      params.require(:alumno).permit(:nombre, :apellido, :rut, :codigo_carrera, :semestre, :ano, :user_id,:email)
     end
 end

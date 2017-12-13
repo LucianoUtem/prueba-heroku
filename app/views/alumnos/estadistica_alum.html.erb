@@ -1,2 +1,33 @@
 <h1>Estadistica de Alumnos segun Año de practica</h1>
+<%= link_to "Imprimir", "#", onclick: "printPage()",:class => "btn btn-info" %> 
 <%= pie_chart @alum %>
+<%total = Alumno.joins(:practica).count%>
+<table class="table table-bordered">
+        <thead>
+          <tr>
+          <th>año</th>
+          <th>cantidad</th>
+          <th>porcentaje</th>
+           
+          </tr>
+        </thead>
+          <tbody>
+            <% @alum.each do |c| %>
+              <tr>
+
+
+                <td><%= c[0] %></td>
+                <td><%= c[1] %></td>
+                <td><%= (c[1].to_f/total)*100 %>%</td>
+             
+                
+               
+              </tr>
+            <% end %> 
+          </tbody>
+      </table>
+<script type="text/javascript">
+  function printPage() {
+    window.print();
+  }
+</script>

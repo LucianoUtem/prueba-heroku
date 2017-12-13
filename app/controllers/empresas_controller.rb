@@ -2,7 +2,13 @@ class EmpresasController < ApplicationController
   before_action :set_empresa, only: [:mostrar, :editar, :update, :eliminar]
   before_action :authenticate_user!
   def index 
-    @empresas = Empresa.all.paginate(page: params[:page], per_page: 5)
+    @q = params[:q]
+    if @q 
+      @query = Empresa.where(:rut_empresa => @q)
+      @empresas = @query.paginate(page: params[:page], per_page: 5)
+    else
+      @empresas = Empresa.all.paginate(page: params[:page], per_page: 5)
+    end
   end
 
   def nuevo
@@ -63,7 +69,6 @@ class EmpresasController < ApplicationController
             format.html {redirect_to asignarEmpresas_url(params[:id],@empresas.id), notice: 'Se Persistio la empresa'}
           else
             format.html {render :nuevo2}
-            puts "no se guardo"
           end
       end
     end
